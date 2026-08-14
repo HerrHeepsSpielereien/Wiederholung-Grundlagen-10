@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wöchentliches Grundwissen Mathematik - Klasse 10</title>
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; padding: 20px; max-width: 900px; margin: 0 auto; }
+
+        header {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            color: white; padding: 25px 30px; border-radius: 12px; margin-bottom: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center;
+        }
+        header h1 { font-size: 1.8rem; margin-bottom: 6px; }
+        header p { opacity: 0.9; font-size: 1rem; }
+
+        .container {
+            background-color: var(--card-bg); border: 1px solid var(--border);
+            border-radius: 12px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            min-height: 400px;
+        }
+
+        /* Dashboard Overview */
+        .dashboard-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin-top: 20px;
+        }
+        .stat-card {
+            border: 1px solid var(--border); border-radius: 10px; padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: white;
+        }
+        .stat-info h3 { font-size: 1rem; margin-bottom: 4px; color: var(--text-main); }
+        .stat-info p { font-size: 0.85rem; color: var(--text-muted); }
+        
+        .badge-status {
+            padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 0.9rem; text-align: center; min-width: 80px;
+        }
+        .badge-green { background-color: #dcfce7; color: #15803d; }
+        .badge-orange { background-color: #ffedd5; color: #c2410c; }
+        .badge-red { background-color: #fee2e2; color: #b91c1c; }
+        .badge-gray { background-color: #f1f5f9; color: #64748b; }
+
+        .start-btn-container { text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .btn-primary {
+            background-color: var(--primary); color: white; border: none; padding: 14px 28px;
+            border-radius: 8px; font-weight: 700; font-size: 1.1rem; cursor: pointer; transition: background 0.2s;
+        }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+
+        /* Quiz View */
+        .quiz-header {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+            border-bottom: 2px solid var(--border); padding-bottom: 10px;
+        }
+        .progress-indicator { font-weight: 600; color: var(--primary); }
+        
+        .rule-box {
+            background-color: #e0e7ff; border-left: 5px solid #4f46e5; border-radius: 8px;
+            padding: 15px 20px; margin-bottom: 25px; font-size: 0.95rem;
+        }
+        .rule-box h4 { color: #3730a3; margin-bottom: 8px; }
+
+        .task-box {
+            background-color: #fafafa; border: 1px solid var(--border); border-radius: 8px;
+            padding: 25px; margin-bottom: 20px; font-size: 1.1rem; text-align: center; font-weight: 600;
+        }
+
+        .btn-toggle-sol {
+            background-color: #e2e8f0; border: none; padding: 10px 18px; border-radius: 6px;
+            font-weight: 600; cursor: pointer; color: var(--text-main); transition: background 0.2s;
+            display: block; margin: 0 auto 20px auto;
+        }
+        .btn-toggle-sol:hover { background-color: #cbd5e1; }
+
+        .sol-box {
+            display: none; background-color: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
+            padding: 20px; margin-bottom: 20px; color: #166534; text-align: center; font-size: 1.05rem;
+        }
+
+        .eval-section {
+            display: none; text-align: center; padding-top: 20px; border-top: 1px solid var(--border);
+        }
+        .btn-eval {
+            padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600;
+            font-size: 1rem; margin: 0 10px; color: white; transition: opacity 0.2s;
+        }
+        .btn-eval:hover { opacity: 0.8; }
+        .btn-correct { background-color: var(--success); }
+        .btn-wrong { background-color: var(--danger); }
+
+        /* Fraction styling */
+        .frac { display: inline-block; vertical-align: middle; text-align: center; font-size: 0.9em; margin: 0 2px; }
+        .frac span.num { display: block; border-bottom: 1.5px solid currentColor; padding: 0 2px; line-height: 1.1; }
+        .frac span.den { display: block; padding: 0 2px; line-height: 1.1; }
+
+        .hidden { display: none !important; }
+        
+        .reset-link { text-align: center; margin-top: 30px; font-size: 0.85rem; }
+        .reset-link a { color: var(--text-muted); cursor: pointer; text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>📐 Wöchentliches Mathe-Training (Kl. 10)</h1>
+        <p>Generiert jede Woche 3 zufällige Aufgaben zum Grundwissen.</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- DASHBOARD VIEW -->
+        <div id="view-dashboard">
+            <h2>Dein Lernfortschritt</h2>
+            <p style="color: var(--text-muted); margin-bottom: 15px;">Hier siehst du, wie sicher du in den einzelnen Themengebieten bist.</p>
+            
+            <div class="dashboard-grid" id="dashboard-grid">
+                <!-- Injected via JS -->
+            </div>
+
+            <div class="start-btn-container">
+                <button class="btn-primary" onclick="startWeeklyTest()">🚀 Neues Wochen-Quiz starten</button>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 10px;">Es werden 3 zufällige Aufgaben generiert.</p>
+            </div>
+            
+            <div class="reset-link">
+                <a onclick="resetStats()">Fortschritt zurücksetzen</a>
+            </div>
+        </div>
+
+        <!-- QUIZ VIEW -->
+        <div id="view-quiz" class="hidden">
+            <div class="quiz-header">
+                <h2 id="quiz-cat-title">Thema</h2>
+                <div class="progress-indicator" id="quiz-progress">Aufgabe 1 / 3</div>
+            </div>
+
+            <div class="rule-box" id="quiz-rule">
+                <h4>💡 Merkkasten</h4>
+                <div id="quiz-rule-text"></div>
+            </div>
+
+            <div class="task-box" id="quiz-task">
+                <!-- Task injected -->
+            </div>
+
+            <button class="btn-toggle-sol" id="btn-show-sol" onclick="showSolution()">👁️ Meine Lösung überprüfen</button>
+
+            <div class="sol-box" id="quiz-sol">
+                <!-- Solution injected -->
+            </div>
+
+            <div class="eval-section" id="quiz-eval">
+                <p style="margin-bottom: 15px; font-weight: 600;">War deine Lösung richtig?</p>
+                <button class="btn-eval btn-correct" onclick="submitAnswer(true)">✓ Richtig</button>
+                <button class="btn-eval btn-wrong" onclick="submitAnswer(false)">✗ Falsch</button>
+            </div>
+        </div>
+
+        <!-- SUMMARY VIEW -->
+        <div id="view-summary" class="hidden" style="text-align: center; padding: 40px 0;">
+            <h2 style="font-size: 2rem; margin-bottom: 10px;">🎉 Geschafft!</h2>
+            <p style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-muted);">Du hast deine 3 Aufgaben für heute absolviert.</p>
+            <button class="btn-primary" onclick="showDashboard()">Zurück zur Übersicht</button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- MATH HELPER FUNCTIONS ---
+        function getRnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        
+        function getRndNonZero(min, max) {
+            let r = 0;
+            while(r === 0) r = getRnd(min, max);
+            return r;
+        }
+
+        function fmtSign(num) { return num < 0 ? `- ${Math.abs(num)}` : `+ ${num}`; }
+        function fmtSignFirst(num) { return num < 0 ? `-${Math.abs(num)}` : `${num}`; }
+        
+        function fmtTerm(coeff, variable) {
+            if (coeff === 0) return "0";
+            if (coeff === 1) return variable;
+            if (coeff === -1) return "-" + variable;
+            return coeff + variable;
+        }
+
+        function fmtFrac(num, den) {
+            return `<span class="frac"><span class="num">${num}</span><span class="den">${den}</span></span>`;
+        }
+
+        // --- TASK GENERATORS ---
+        // 1. Lineare Funktionen
+        function genCat1() {
+            let mNum = getRndNonZero(-5, 5);
+            let mDen = getRnd(1, 3);
+            let b = getRndNonZero(-5, 5);
+            
+            let mStr = mDen === 1 ? mNum.toString() : fmtFrac(mNum, mDen);
+            let mValText = mDen === 1 ? mNum.toString() : `${mNum}/${mDen}`;
+            let bStr = b < 0 ? `- ${Math.abs(b)}` : `+ ${b}`;
+            
+            let isReading = getRnd(0,1) === 0;
+            let q, sol;
+
+            if (isReading) {
+                q = `Lese Steigung (m) und y-Achsenabschnitt (b) ab:<br><br>Eine Gerade schneidet die y-Achse bei y = ${b} und geht von dort aus ${mDen} Schritt(e) nach rechts und ${Math.abs(mNum)} Schritt(e) nach ${mNum < 0 ? 'unten' : 'oben'}. Wie lautet die Funktionsgleichung f(x)?`;
+                sol = `y-Achsenabschnitt b = ${b}<br>Steigung m = ${mValText}<br><br><b>f(x) = ${mStr}x ${bStr}</b>`;
+            } else {
+                q = `Gib die Steigung m und den y-Achsenabschnitt b an:<br><br><b>f(x) = ${mStr}x ${bStr}</b>`;
+                sol = `<b>b = ${b}</b> (Schnittpunkt mit der y-Achse bei 0 | ${b})<br><b>m = ${mValText}</b> (${mDen} nach rechts, ${Math.abs(mNum)} nach ${mNum < 0 ? 'unten' : 'oben'})`;
+            }
+
+            return {
+                q: q,
+                sol: sol,
+                rule: `<b>f(x) = m·x + b</b><br><b>b</b> = y-Achsenabschnitt (Schnittpunkt mit y-Achse).<br><b>m</b> = Steigung (Veränderung y / Veränderung x). Gehe vom y-Achsenabschnitt den Nenner nach rechts und den Zähler nach oben/unten.`
+            };
+        }
+
+        // 2. Binomische Formeln
+        function genCat2() {
+            let type = getRnd(1, 3);
+            let a = getRnd(1, 5);
+            let b = getRnd(1, 6);
+            let var1 = "x";
+            
+            let q, sol;
+            let ax = fmtTerm(a, var1);
+            let a2 = a*a;
+            let ab2 = 2*a*b;
+            let b2 = b*b;
+
+            if (type === 1) {
+                q = `Löse die Klammer mit der 1. binomischen Formel auf:<br><br><b>(${ax} + ${b})²</b>`;
+                sol = `(${ax})² + 2·(${ax})·${b} + ${b}² = <br><br><b>${a2 === 1 ? '' : a2}x² + ${ab2}x + ${b2}</b>`;
+            } else if (type === 2) {
+                q = `Löse die Klammer mit der 2. binomischen Formel auf:<br><br><b>(${ax} - ${b})²</b>`;
+                sol = `(${ax})² - 2·(${ax})·${b} + ${b}² = <br><br><b>${a2 === 1 ? '' : a2}x² - ${ab2}x + ${b2}</b>`;
+            } else {
+                q = `Löse die Klammer mit der 3. binomischen Formel auf:<br><br><b>(${ax} + ${b})(${ax} - ${b})</b>`;
+                sol = `(${ax})² - ${b}² = <br><br><b>${a2 === 1 ? '' : a2}x² - ${b2}</b>`;
+            }
+
+            return {
+                q: q,
+                sol: sol,
+                rule: `1. Binomische Formel: <b>(a + b)² = a² + 2ab + b²</b><br>2. Binomische Formel: <b>(a - b)² = a² - 2ab + b²</b><br>3. Binomische Formel: <b>(a + b)(a - b) = a² - b²</b>`
+            };
+        }
+
+        // 3. Nullstellen linearer Funktionen
+        function genCat3() {
+            let root = getRndNonZero(-8, 8);
+            let m = getRndNonZero(-5, 5);
+            let b = -(m * root); // Ensures integer root
+            
+            let bStr = b < 0 ? `- ${Math.abs(b)}` : `+ ${b}`;
+            let mStr = fmtTerm(m, "x");
+
+            let q = `Berechne die Nullstelle der linearen Funktion:<br><br><b>f(x) = ${mStr} ${bStr}</b>`;
+            let sol = `Ansatz: f(x) = 0<br>${mStr} ${bStr} = 0 &nbsp;&nbsp;| ${b < 0 ? '+ '+Math.abs(b) : '- '+b}<br>${mStr} = ${-b} &nbsp;&nbsp;| :(${m})<br><br><b>x = ${root}</b>`;
+
+            return {
+                q: q,
+                sol: sol,
+                rule: `<b>Nullstelle berechnen:</b> Setze die Funktion gleich Null: <b>0 = mx + b</b>. Löse die Gleichung dann schrittweise nach x auf (Äquivalenzumformung).`
+            };
+        }
+
+        // 4. PQ-Formel
+        function genCat4() {
+            // Generate roots x1, x2 to ensure clean solutions
+            let x1 = getRnd(-6, 6);
+            let x2 = getRnd(-6, 6);
+            
+            let p = -(x1 + x2);
+            let q_val = x1 * x2;
+            let a = getRnd(1, 3); // Multiply equation to force division step
+            
+            let a_p = a * p;
+            let a_q = a * q_val;
+            
+            let eq = "";
+            if (a === 1) {
+                eq = `x² ${p === 0 ? '' : fmtSign(p)+'x'} ${q_val === 0 ? '' : fmtSign(q_val)} = 0`;
+            } else {
+                eq = `${a}x² ${a_p === 0 ? '' : fmtSign(a_p)+'x'} ${a_q === 0 ? '' : fmtSign(a_q)} = 0`;
+            }
+
+            // Cleanup "+ 0" edge cases if generated poorly, simple fix:
+            eq = eq.replace("  ", " ").replace("= 0", " = 0").replace("x²  =", "x² =");
+
+            let q = `Berechne die Nullstellen der quadratischen Gleichung mit der pq-Formel:<br><br><b>${eq}</b>`;
+            
+            let sol = "";
+            if (a !== 1) {
+                sol += `1. Schritt: Durch ${a} teilen, um Normalform herzustellen:<br>x² ${fmtSign(p)}x ${fmtSign(q_val)} = 0<br><br>`;
+            }
+            sol += `2. Schritt: p und q ablesen:<br>p = ${p}, q = ${q_val}<br><br>`;
+            
+            let p_half = p / 2;
+            let D = (p_half * p_half) - q_val;
+            
+            sol += `3. Schritt: In pq-Formel einsetzen:<br>x<sub>1,2</sub> = ${-p_half} &plusmn; &radic;(${p_half * p_half} - (${q_val}))<br>`;
+            sol += `x<sub>1,2</sub> = ${-p_half} &plusmn; &radic;${D}<br><br>`;
+            
+            if (x1 === x2) {
+                sol += `<b>x = ${x1}</b> (Eine doppelte Lösung)`;
+            } else {
+                sol += `<b>x₁ = ${Math.max(x1,x2)}</b> &nbsp;und&nbsp; <b>x₂ = ${Math.min(x1,x2)}</b>`;
+            }
+
+            return {
+                q: q,
+                sol: sol,
+                rule: `<b>pq-Formel:</b><br>1. Normalform herstellen: <b>x² + px + q = 0</b><br>2. Formel anwenden: <b>x<sub>1,2</sub> = -(p/2) &plusmn; &radic;((p/2)² - q)</b>`
+            };
+        }
+
+        // 5. Terme zusammenfassen
+        function genCat5() {
+            let var1 = "x";
+            let c1 = getRndNonZero(-5, 8);
+            let c2 = getRndNonZero(-5, 8);
+            let num1 = getRndNonZero(-10, 10);
+            let num2 = getRndNonZero(-10, 10);
+            
+            // Equation like: 3x - 5 = -2x + 10 => collect terms
+            let q = `Fasse zusammen und löse nach x auf:<br><br><b>${fmtTerm(c1, var1)} ${fmtSign(num1)} = ${fmtTerm(c2, var1)} ${fmtSign(num2)}</b>`;
+            
+            // calculation
+            let c_diff = c1 - c2;
+            if (c_diff === 0) c2 = c2 - 1; // prevent 0x division
+            c_diff = c1 - c2;
+            let num_diff = num2 - num1;
+            
+            let sol = ``;
+            sol += `${fmtTerm(c1, var1)} ${fmtSign(num1)} = ${fmtTerm(c2, var1)} ${fmtSign(num2)} &nbsp;&nbsp;| ${fmtSign(-c2)}x<br>`;
+            sol += `${fmtTerm(c_diff, var1)} ${fmtSign(num1)} = ${num2} &nbsp;&nbsp;| ${fmtSign(-num1)}<br>`;
+            sol += `${fmtTerm(c_diff, var1)} = ${num_diff} &nbsp;&nbsp;| :(${c_diff})<br><br>`;
+            
+            let res = num_diff / c_diff;
+            if (Number.isInteger(res)) {
+                sol += `<b>x = ${res}</b>`;
+            } else {
+                // simple frac logic
+                let sign = (num_diff * c_diff < 0) ? "-" : "";
+                sol += `<b>x = ${sign}${fmtFrac(Math.abs(num_diff), Math.abs(c_diff))}</b>`;
+            }
+
+            return {
+                q: q,
+                sol: sol,
+                rule: `<b>Gleichungen umstellen:</b><br>1. Alle Terme mit x auf eine Seite bringen (mit + oder -).<br>2. Alle Zahlen auf die andere Seite bringen.<br>3. Am Ende durch die Zahl vor dem x teilen.`
+            };
+        }
+
+        const categories = [
+            { id: 1, name: "1. Lineare Funktionen", desc: "Graph ablesen & Steigung/y-Achsenabschnitt", gen: genCat1 },
+            { id: 2, name: "2. Binomische Formeln", desc: "Formeln anwenden & Klammern auflösen", gen: genCat2 },
+            { id: 3, name: "3. Nullstellen (linear)", desc: "f(x) = 0 bei linearen Funktionen", gen: genCat3 },
+            { id: 4, name: "4. Nullstellen (pq-Formel)", desc: "ax² + bx + c = 0 berechnen", gen: genCat4 },
+            { id: 5, name: "5. Terme & Gleichungen", desc: "Zusammenfassen und umstellen", gen: genCat5 }
+        ];
+
+        // --- STATE MANAGEMENT ---
+        let stats = JSON.parse(localStorage.getItem('math10_stats')) || {
+            1: { asked: 0, correct: 0 },
+            2: { asked: 0, correct: 0 },
+            3: { asked: 0, correct: 0 },
+            4: { asked: 0, correct: 0 },
+            5: { asked: 0, correct: 0 }
+        };
+
+        function saveStats() {
+            localStorage.setItem('math10_stats', JSON.stringify(stats));
+        }
+
+        // --- APP LOGIC ---
+        let currentQuiz = [];
+        let currentTaskIdx = 0;
+
+        function initApp() {
+            renderDashboard();
+        }
+
+        function getBadge(asked, correct) {
+            if (asked === 0) return `<span class="badge-status badge-gray">Neu</span>`;
+            let pct = Math.round((correct / asked) * 100);
+            if (pct >= 75) return `<span class="badge-status badge-green">${pct}%</span>`;
+            if (pct >= 50) return `<span class="badge-status badge-orange">${pct}%</span>`;
+            return `<span class="badge-status badge-red">${pct}%</span>`;
+        }
+
+        function renderDashboard() {
+            document.getElementById('view-dashboard').classList.remove('hidden');
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-summary').classList.add('hidden');
+
+            const grid = document.getElementById('dashboard-grid');
+            grid.innerHTML = '';
+
+            categories.forEach(cat => {
+                let s = stats[cat.id];
+                let card = document.createElement('div');
+                card.className = 'stat-card';
+                card.innerHTML = `
+                    <div class="stat-info">
+                        <h3>${cat.name}</h3>
+                        <p>${cat.desc}</p>
+                        <p style="font-size:0.8rem; margin-top:5px;">Geübt: ${s.asked}x</p>
+                    </div>
+                    <div>
+                        ${getBadge(s.asked, s.correct)}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function startWeeklyTest() {
+            // Pick 3 categories prioritizing lowest "asked" count
+            let sortedCats = [...categories].sort((a, b) => {
+                let countA = stats[a.id].asked;
+                let countB = stats[b.id].asked;
+                if (countA === countB) return Math.random() - 0.5; // shuffle ties
+                return countA - countB;
+            });
+            
+            let selectedCats = sortedCats.slice(0, 3);
+            currentQuiz = selectedCats.map(cat => {
+                let taskData = cat.gen();
+                return { catId: cat.id, name: cat.name, task: taskData };
+            });
+
+            currentTaskIdx = 0;
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-summary').classList.add('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+            
+            renderCurrentTask();
+        }
+
+        function renderCurrentTask() {
+            let item = currentQuiz[currentTaskIdx];
+            
+            document.getElementById('quiz-cat-title').innerText = item.name;
+            document.getElementById('quiz-progress').innerText = `Aufgabe ${currentTaskIdx + 1} von 3`;
+            
+            document.getElementById('quiz-rule-text').innerHTML = item.task.rule;
+            document.getElementById('quiz-task').innerHTML = item.task.q;
+            document.getElementById('quiz-sol').innerHTML = item.task.sol;
+            
+            // Reset UI states
+            document.getElementById('quiz-sol').style.display = 'none';
+            document.getElementById('btn-show-sol').style.display = 'block';
+            document.getElementById('quiz-eval').style.display = 'none';
+        }
+
+        function showSolution() {
+            document.getElementById('btn-show-sol').style.display = 'none';
+            document.getElementById('quiz-sol').style.display = 'block';
+            document.getElementById('quiz-eval').style.display = 'block';
+        }
+
+        function submitAnswer(isCorrect) {
+            let catId = currentQuiz[currentTaskIdx].catId;
+            stats[catId].asked++;
+            if (isCorrect) stats[catId].correct++;
+            saveStats();
+
+            currentTaskIdx++;
+            if (currentTaskIdx < 3) {
+                renderCurrentTask();
+            } else {
+                showSummary();
+            }
+        }
+
+        function showSummary() {
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('view-summary').classList.remove('hidden');
+        }
+
+        function showDashboard() {
+            renderDashboard();
+        }
+
+        function resetStats() {
+            if(confirm("Willst du wirklich alle deine gespeicherten Fortschritte löschen?")) {
+                stats = {
+                    1: { asked: 0, correct: 0 },
+                    2: { asked: 0, correct: 0 },
+                    3: { asked: 0, correct: 0 },
+                    4: { asked: 0, correct: 0 },
+                    5: { asked: 0, correct: 0 }
+                };
+                saveStats();
+                renderDashboard();
+            }
+        }
+
+        // Start
+        window.onload = initApp;
+    </script>
+</body>
+</html>
